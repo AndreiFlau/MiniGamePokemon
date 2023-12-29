@@ -1,4 +1,4 @@
-﻿
+
 public class Pokemon
 {
     private string? _name { get; set; }
@@ -37,12 +37,6 @@ public class Pokemon
     {
         get { return _defense; }
         set { _defense = value; }
-    }
-
-    public List<string> moves
-    {
-        get { return _moves; }
-        set { _moves = value; }
     }
 
 
