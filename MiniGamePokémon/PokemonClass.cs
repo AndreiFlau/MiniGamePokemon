@@ -1,3 +1,47 @@
+﻿using System.Linq;
+using System.Threading.Tasks.Dataflow;
+
+public class PokemonMoves
+{
+    private string? _name { get; set; }
+    private string? _type { get; set; }
+
+    public string? name 
+    { 
+        get { return _name; } 
+        set { _name = value; } 
+    }
+
+    public string? type 
+    { 
+        get { return _type; } 
+        set { _type = value; } 
+    }
+
+    public PokemonMoves()
+    {
+        _name = string.Empty;
+        _type = string.Empty;
+    }
+
+    public static Dictionary<string, PokemonMoves> GetPokemonMoves()
+    {
+        Dictionary<string, PokemonMoves> pokemonMoves = new Dictionary<string, PokemonMoves>()
+        {
+            { "Ember", new PokemonMoves { name = "Ember", type = "Fire" } },
+            { "Scratch", new PokemonMoves { name = "Scratch", type = "Normal" } },
+            { "Growl", new PokemonMoves { name = "Growl", type = "Normal" } },
+            { "Leer", new PokemonMoves { name = "Leer", type = "Normal" } },
+            { "Water Gun", new PokemonMoves { name = "Water Gun", type = "Water" } },
+            { "Tackle", new PokemonMoves { name = "Tackle", type = "Normal" } },
+            { "Tail Whip", new PokemonMoves { name = "Tail Whip", type = "Normal" } },
+            { "Bubble", new PokemonMoves { name = "Bubble", type = "Water" } },
+            { "Vine Whip", new PokemonMoves { name = "Vine Whip", type = "Grass" } },
+            { "Leech Seed", new PokemonMoves { name = "Leech Seed", type = "Grass" } }
+        };
+        return pokemonMoves;
+    }
+}
 
 public class Pokemon
 {
@@ -7,7 +51,10 @@ public class Pokemon
     private int _attack { get; set; }
     private int _defense { get; set; }
 
-    private List<string> _moves = new List<string>();
+    //private List<string> _moves = new List<string>();
+
+    public Dictionary<string, PokemonMoves> pokemonMoves = new Dictionary<string, PokemonMoves>();
+
 
     public string? name
     {
@@ -47,7 +94,7 @@ public class Pokemon
         _hp = 0;
         _attack = 0;
         _defense = 0;
-        _moves = new List<string>();
+        pokemonMoves = PokemonMoves.GetPokemonMoves();
     }
 
 
@@ -78,7 +125,13 @@ public class Pokemon
         pokemon._hp = 190;
         pokemon._attack = 52;
         pokemon._defense = 36;
-        pokemon._moves = new List<string> { "Ember", "Scratch", "Growl", "Leer" };
+        pokemon.pokemonMoves = new Dictionary<string, PokemonMoves>
+        {
+            { "Ember", pokemonMoves["Ember"] },
+            { "Scratch", pokemonMoves["Scratch"] },
+            { "Growl", pokemonMoves["Growl"] },
+            { "Leer", pokemonMoves["Leer"] }
+        };
     }
 
     public void CreateSquirtle(Pokemon pokemon)
@@ -88,7 +141,13 @@ public class Pokemon
         pokemon._hp = 240;
         pokemon._attack = 48;
         pokemon._defense = 35;
-        pokemon._moves = new List<string> { "Water Gun", "Tackle", "Tail Whip", "Growl" };
+        pokemon.pokemonMoves = new Dictionary<string, PokemonMoves>
+        {
+            { "Water Gun", pokemonMoves["Water Gun"] },
+            { "Tackle", pokemonMoves["Tackle"] },
+            { "Tail Whip", pokemonMoves["Tail Whip"] },
+            { "Bubble", pokemonMoves["Bubble"] }
+        };
     }
 
     public void CreateBulbasaur(Pokemon pokemon)
@@ -98,15 +157,24 @@ public class Pokemon
         pokemon._hp = 250;
         pokemon._attack = 49;
         pokemon._defense = 29;
-        pokemon._moves = new List<string> { "Vine Whip", "Tackle", "Growl", "Leech Seed" };
+        pokemon.pokemonMoves = new Dictionary<string, PokemonMoves>
+        {
+            {"Vine Whip", pokemonMoves["Vine Whip"]},
+            {"Tackle", pokemonMoves["Tackle"]},
+            {"Growl", pokemonMoves["Growl"]},
+            {"Leech Seed", pokemonMoves["Leech Seed"]}
+        };
     }
 
     public static void Attack(Pokemon player, Pokemon enemy, string move)
     {
+        Console.WriteLine($"{player._name} use {move}!!!\n");
+        Thread.Sleep(3000);
         Console.WriteLine($"{player._name} used {move}!");
         int damage = 0;
+        int randomCrit = new Random().Next(1, 4);
 
-        if (player._type == "Fire")
+        if (player.pokemonMoves[move].type == "Fire")
         {
             if (enemy._type == "Grass")
             {
@@ -116,14 +184,14 @@ public class Pokemon
             else if (enemy._type == "Water")
             {
                 Console.WriteLine("It's not very effective...");
-                damage = (player._attack / 2 - enemy._defense + 10);
+                damage = (player._attack - enemy._defense + 10);
             }
             else
             {
                 damage = (player._attack - enemy._defense);
             }
         }
-        else if (player._type == "Water")
+        else if (player.pokemonMoves[move].type == "Water")
         {
             if (enemy._type == "Fire")
             {
@@ -133,14 +201,14 @@ public class Pokemon
             else if (enemy._type == "Grass")
             {
                 Console.WriteLine("It's not very effective...");
-                damage = (player._attack / 2 - enemy._defense + 10);
+                damage = (player._attack - enemy._defense + 10);
             }
             else
             {
                 damage = (player._attack - enemy._defense);
             }
         }
-        else if (player._type == "Grass")
+        else if (player.pokemonMoves[move].type == "Grass")
         {
             if (enemy._type == "Water")
             {
@@ -156,6 +224,17 @@ public class Pokemon
             {
                 damage = (player._attack - enemy._defense);
             }
+        }
+
+        else if (player.pokemonMoves[move].type == "Normal")
+        {
+            damage = (player._attack - enemy._defense);
+        }
+        
+        if (randomCrit == 1)
+        {
+            Console.WriteLine("--- Critical hit!!! ---");
+            damage *= 2;
         }
 
         damage = Math.Max(0, damage);
@@ -232,20 +311,20 @@ public class Pokemon
     public static void PlayerAttack(Pokemon player, Pokemon enemy)
     {
         Console.WriteLine("Choose your move:");
-        foreach (var _move in player._moves)
+        foreach (var _move in player.pokemonMoves)
         {
-            Console.WriteLine(_move);
+            Console.WriteLine(_move.Key);
         }
         Console.WriteLine();
         string? playerMove = Console.ReadLine();
 
-        while (player._moves.Contains(playerMove) == false)
+        while (!player.pokemonMoves.Any(x => x.Key == playerMove))
         {
             Console.WriteLine("This move doesn't exist");
             Console.WriteLine("Try again using one of these moves:");
-            foreach (var move1 in player._moves)
+            foreach (var move1 in player.pokemonMoves)
             {
-                Console.WriteLine(move1);
+                Console.WriteLine(move1.Key);
             }
             playerMove = Console.ReadLine();
         }

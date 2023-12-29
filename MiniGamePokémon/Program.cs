@@ -1,8 +1,9 @@
-﻿Console.WriteLine("Welcome to pokémon, c# edition");
+﻿Console.WriteLine("Welcome to pokémon, C# edition");
 Console.WriteLine("What's your name?");
 string? name = Console.ReadLine();
 
 string? play = "Y";
+
 
 while (play == "Y" || play == "")
 {
@@ -43,7 +44,7 @@ while (play == "Y" || play == "")
     Console.WriteLine();
 
 
-    Console.WriteLine("\nIt's time for a pokémon battle!");
+    Console.WriteLine("\n ⚔️ It's time for a pokémon battle!");
     Pokemon aiPokemon = new Pokemon();
     aiPokemon.aiPokemon(aiPokemon);
     Console.WriteLine($"Your opponent threw out a {aiPokemon.name}");
@@ -70,6 +71,16 @@ while (play == "Y" || play == "")
             }
             Pokemon.PlayerAttack(userPokemon, aiPokemon);
             Console.WriteLine($"\nYour pokémon's hp: {userPokemon.hp} vs Your opponent's pokémon's hp: {aiPokemon.hp}\n");
+            if (aiPokemon.hp <= 0)
+            {
+                Console.WriteLine("Congratulations! You won!");
+                break;
+            }
+            else if (userPokemon.hp <= 0)
+            {
+                Console.WriteLine("Your opponent won this time...");
+                break;
+            }
             Pokemon.EnemyAttack(userPokemon, aiPokemon);
             Console.WriteLine($"\nYour pokémon's hp: {userPokemon.hp} vs Your opponent's pokémon's hp: {aiPokemon.hp}\n");
         }
@@ -92,6 +103,16 @@ while (play == "Y" || play == "")
             }
             Pokemon.EnemyAttack(userPokemon, aiPokemon);
             Console.WriteLine($"\nYour pokémon's hp: {userPokemon.hp} vs Your opponent's pokémon's hp: {aiPokemon.hp}\n");
+            if (aiPokemon.hp <= 0)
+            {
+                Console.WriteLine("Congratulations! You won!");
+                break;
+            }
+            else if (userPokemon.hp <= 0)
+            {
+                Console.WriteLine("Your opponent won this time...");
+                break;
+            }
             Pokemon.PlayerAttack(userPokemon, aiPokemon);
             Console.WriteLine($"\nYour pokémon's hp: {userPokemon.hp} vs Your opponent's pokémon's hp: {aiPokemon.hp}\n");
         }
