@@ -44,7 +44,7 @@ while (play == "Y" || play == "")
     Console.WriteLine();
 
 
-    Console.WriteLine("\n ⚔️ It's time for a pokémon battle!");
+    Console.WriteLine("\nIt's time for a pokémon battle!");
     Pokemon aiPokemon = new Pokemon();
     aiPokemon.aiPokemon(aiPokemon);
     Console.WriteLine($"Your opponent threw out a {aiPokemon.name}");
