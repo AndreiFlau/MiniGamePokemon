@@ -53,7 +53,7 @@ public class Pokemon
 
     //private List<string> _moves = new List<string>();
 
-    public Dictionary<string, PokemonMoves> pokemonMoves = new Dictionary<string, PokemonMoves>();
+    private Dictionary<string, PokemonMoves> pokemonMoves = new Dictionary<string, PokemonMoves>();
 
 
     public string? name
